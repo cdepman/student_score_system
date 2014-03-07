@@ -1,0 +1,157 @@
+def main():
+    import os
+    choice = 0
+    #get user choice
+    #run menu options
+    while choice != 7:
+        #run menu
+        menu()
+        choice = int(input('Enter a menu option: '))
+        if choice == 1: 
+            check_records()
+        elif choice == 2:
+            add_records()
+        elif choice == 3:
+            find_records()
+        elif choice == 4:
+            replace_records()
+        elif choice == 5:
+            delete_records()
+        elif choice == 6:
+            delete_all()
+    print('Goodbye!')
+
+#menu funtion
+def menu():
+    #display menu
+    print('\nMENU')
+    print('(1) Display Student Records')
+    print('(2) Add Student Records')
+    print('(3) Find Student Records')
+    print('(4) Replace Student Records')
+    print('(5) Delete Student Records')
+    print('(6) Delete All Records')
+    print('(7) Exit')
+
+def check_records():
+    student_records = open('student_scores.txt', 'r')
+    print('\nEXISTING RECORD')
+    print('-----------------')
+    total = 0
+    entries = 0
+    name = student_records.readline()
+    score = student_records.readline()
+    while name != '':
+        name = name.rstrip('\n')
+        score = score.rstrip('\n')
+        total += float(score)
+        entries += 1
+        print(name)
+        print(score)
+        name = student_records.readline()
+        score = student_records.readline()
+        
+    print('-----------------')
+    print('END OF RECORD')
+    print('CLASS AVERAGE:', format(total/entries, '.2f'))
+    student_records.close()
+
+def add_records():
+    student_records = open('student_scores.txt', 'a')
+    cont = 'y'
+    while cont == 'y' or cont == 'Y':
+        try:
+            print('\nBelow, please enter the student\'s name and his/her exam score.')
+            name = input('Student name: ')
+            score = float(input(name +'\'s score: '))
+            student_records.write(name + '\n')
+            student_records.write(str(score) + '\n')
+            cont = input('Would you like to continue to add records?')
+        except:
+            print('An error occured.')
+    student_records.close()
+    print('New student records saved to student_scores.txt.')
+
+def find_records():
+    found = False
+    search = input('Please enter a student\'s full name: ')
+    student_records = open('student_scores.txt')
+    name = student_records.readline()
+    while name != '':
+        score = student_records.readline()
+        name = name.rstrip('\n')
+        if name == search:
+            print('\nName:', name)
+            print('Score:', score, '\n')
+            found = True
+        name = student_records.readline()
+
+    student_records.close()
+    if not found:
+        print('Student not found')
+
+def replace_records():
+    import os
+    found = False
+    search = input('Please enter a student\'s full name: ')
+    new_score = float(input('Please enter ' + search + '\'s new score: '))
+    student_records = open('student_scores.txt', 'r')
+    temp_records = open('temp_records.txt', 'w')
+    name = student_records.readline()
+    while name != '':
+        score = student_records.readline()
+        name = name.rstrip('\n')
+        score = score.rstrip('\n')
+        if name == search:
+            temp_records.write(name + '\n')
+            temp_records.write(str(new_score) + '\n')
+            found = True
+        else:
+            temp_records.write(name + '\n')
+            temp_records.write(str(score) + '\n')
+        name = student_records.readline()
+    student_records.close()
+    temp_records.close()
+
+    os.remove('student_scores.txt')
+    os.rename('temp_records.txt','student_scores.txt')
+                    
+    if found:
+        print('The file has been updated.')
+    else:
+        print('That item was not found in the file.')
+
+def delete_records():
+    import os
+    found = False
+    search = input('Please enter a student\'s full name: ')
+    student_records = open('student_scores.txt', 'r')
+    temp_records = open('temp_records.txt', 'w')
+    name = student_records.readline()
+    while name != '':
+        name = name.rstrip('\n')
+        score = student_records.readline()
+        score = score.rstrip('\n')
+        if name != search:
+            temp_records.write(name + '\n')
+            temp_records.write(score + '\n')
+        else:
+            found = True
+        name = student_records.readline()
+    student_records.close()
+    temp_records.close()
+    
+    os.remove('student_scores.txt')
+    os.rename('temp_records.txt','student_scores.txt')
+
+    if found:
+        print('Record successfully deleted')
+    else:
+        print('Record not found')
+
+def delete_all():
+    are_you_sure = input('Are you sure you want to delete all data? y or n: ')
+    if are_you_sure == 'y':
+        os.remove('student_scores.txt')
+        
+main()
