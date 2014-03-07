@@ -1,4 +1,4 @@
 student_score_system
 ====================
 
-creates, stores, displays, modifies and averages a set of student scores in a txt file
+a python file that creates, stores, displays, modifies and averages a set of student test scores in a txt file
